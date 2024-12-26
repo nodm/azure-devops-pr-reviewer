@@ -25,7 +25,7 @@ export async function getRepositories(
 export async function getPullRequests(
   gitApi: IGitApi,
   repository: GitRepository,
-  pullRequestCriteria: GitPullRequestSearchCriteria = {},
+  searchCriteria: GitPullRequestSearchCriteria = {},
 ): Promise<GitPullRequest[] | void> {
   if (!repository.id) {
     throw new Error('Repository ID is required');
@@ -33,7 +33,7 @@ export async function getPullRequests(
 
   const pullRequests = await gitApi.getPullRequests(
     repository.id,
-    pullRequestCriteria,
+    searchCriteria,
   );
 
   return pullRequests;
