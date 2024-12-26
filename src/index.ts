@@ -1,4 +1,7 @@
-export default function greet(name = 'world'): void {
-  console.log(`Hello, ${name}!`);
+import {getApi} from './common';
+
+async function main() {
+  const api = await getApi();
 }
-greet();
+
+void main();
