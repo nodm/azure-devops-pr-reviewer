@@ -1,0 +1,1 @@
+export {getEnvVariable} from './getEnvVariable';
