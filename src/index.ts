@@ -1,5 +1,10 @@
 import {getApi, getGitApi} from './common';
-import {getPullRequest, getPullRequestFiles, getRepository} from './steps';
+import {
+  getCodeReview,
+  getPullRequest,
+  getPullRequestFiles,
+  getRepository,
+} from './steps';
 
 async function main() {
   const api = await getApi();
@@ -11,7 +16,9 @@ async function main() {
 
   const files = await getPullRequestFiles(gitApi, pullRequest);
 
-  console.log(files[0].content);
+  const codeReview = await getCodeReview(files);
+
+  console.log(codeReview);
 }
 
 void main();
