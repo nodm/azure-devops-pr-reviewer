@@ -5,6 +5,7 @@ import {
   getPullRequestFiles,
   getRepository,
 } from './steps';
+import {createComment} from './common';
 
 async function main() {
   const api = await getApi();
@@ -18,7 +19,11 @@ async function main() {
 
   const codeReview = await getCodeReview(files);
 
-  console.log(codeReview);
+  await createComment(gitApi, pullRequest, codeReview);
+
+  console.log(
+    '\n✅ Code review has been completed, the comment has been added to the pull request',
+  );
 }
 
 void main();

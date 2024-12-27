@@ -132,39 +132,29 @@ export async function getFileContent(
 
 export async function createComment(
   gitApi: IGitApi,
-  repository: GitRepository,
   pullRequest: GitPullRequest,
-  comment: Comment,
+  content: string,
 ) {
-  if (!repository.id) {
+  if (!pullRequest.repository?.id) {
     throw new Error('Repository ID is required');
+  }
+  if (!pullRequest.repository?.project?.id) {
+    throw new Error('Project ID is required');
   }
   if (!pullRequest.pullRequestId) {
     throw new Error('Pull request ID is required');
   }
 
-  const threads = await gitApi.getThreads(
-    repository.id,
-    pullRequest.pullRequestId,
+  const repositoryId = pullRequest.repository.id;
+  const projectId = pullRequest.repository.project.id;
+  const pullRequestId = pullRequest.pullRequestId;
+
+  const thread = await gitApi.createThread(
+    {comments: [{content}]},
+    repositoryId,
+    pullRequestId,
+    projectId,
   );
 
-  if (!threads.length) {
-    throw new Error(
-      `Must have an active pull request in "${repository.name}" repo with an active comment thread`,
-    );
-  }
-
-  const [firstThread] = threads;
-  if (!firstThread.id) {
-    throw new Error('Thread ID is required');
-  }
-
-  comment = await gitApi.createComment(
-    comment,
-    repository.id,
-    pullRequest.pullRequestId,
-    firstThread.id,
-  );
-
-  return comment;
+  return thread;
 }

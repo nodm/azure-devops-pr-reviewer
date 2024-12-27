@@ -83,7 +83,7 @@ ${files
   };
   messages.push(message);
 
-  let codeReview = '';
+  let codeReview = `**Model:** _${model}_\n`;
   const response = await ollama.chat({
     model,
     messages,
