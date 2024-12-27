@@ -5,4 +5,6 @@ export {
   getGitApi,
   getPullRequests,
   getRepositories,
+  getPullRequestChanges,
+  getFileContent,
 } from './gitApi';

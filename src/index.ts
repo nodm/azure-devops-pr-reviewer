@@ -1,7 +1,9 @@
-import {type IGitApi} from 'azure-devops-node-api/GitApi';
+import type {IGitApi} from 'azure-devops-node-api/GitApi';
 import {
   type GitRepository,
+  type GitPullRequest,
   PullRequestStatus,
+  VersionControlChangeType,
 } from 'azure-devops-node-api/interfaces/GitInterfaces';
 import select from '@inquirer/select';
 import {
@@ -10,6 +12,8 @@ import {
   getGitApi,
   getPullRequests,
   getRepositories,
+  getPullRequestChanges,
+  getFileContent,
 } from './common';
 
 async function main() {
@@ -19,7 +23,10 @@ async function main() {
   const repository = await getRepository(gitApi);
 
   const pullRequest = await getPullRequest(gitApi, repository);
-  console.log(pullRequest);
+
+  const files = await getPullRequestFiles(gitApi, pullRequest);
+
+  console.log(files[0].content);
 }
 
 async function getRepository(gitApi: IGitApi) {
@@ -80,6 +87,34 @@ async function getPullRequest(gitApi: IGitApi, repository: GitRepository) {
   });
 
   return pullRequest;
+}
+
+async function getPullRequestFiles(
+  gitApi: IGitApi,
+  pullRequest: GitPullRequest,
+) {
+  const changes = await getPullRequestChanges(gitApi, pullRequest);
+  const paths = changes
+    .filter(
+      // skip deleted files
+      change => change.changeType !== VersionControlChangeType.Delete,
+    )
+    .filter(change => Boolean(change.item))
+    .map(change => change.item!.path)
+    .filter(Boolean)
+    .filter(path => path!.match(/\.(ts|js)$/)); // JS and TS files only
+
+  // eslint-disable-next-line n/no-unsupported-features/es-builtins
+  const files = await Promise.allSettled(
+    paths.map(async path => {
+      const content = await getFileContent(gitApi, pullRequest, path!);
+      return {path, content};
+    }),
+  );
+
+  return files
+    .filter(result => result.status === 'fulfilled')
+    .map(result => result.value);
 }
 
 void main();
