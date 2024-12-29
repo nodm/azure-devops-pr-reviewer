@@ -22,15 +22,6 @@ export async function getRepositories(
   return repositories;
 }
 
-export async function getRepository(
-  gitApi: IGitApi,
-  repositoryId: string,
-): Promise<GitRepository> {
-  const repository = await gitApi.getRepository(repositoryId);
-
-  return repository;
-}
-
 export async function getPullRequests(
   gitApi: IGitApi,
   repository: GitRepository,
