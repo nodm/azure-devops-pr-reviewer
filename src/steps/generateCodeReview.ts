@@ -38,7 +38,7 @@ export async function generateCodeReview(
   const files = changes
     .filter(change => Boolean(change.item))
     .map(change => change.item!.path)
-    .filter(path => Boolean(path));
+    .filter(Boolean);
 
   const userMessage: Message = {
     role: 'user',
@@ -59,14 +59,14 @@ Provide a comprehensive code review for the pull request with ID=${pullRequest.p
 Provide specific examples and actionable steps for improvement.
 Mention only things that can/should be improved and avoid making subjective judgments. You don't need to mention a point that that does not need improvement.
 
-Here is the list of files included in the pull request:
-${files.map(file => `- ${file}`).join('\n')}
+Also provide a review for each file in the pull request. Here is the list of files:
+${files.map(file => ` - ${file}`).join('\n')}
 `,
   };
   const messages: Message[] = [systemMessage, userMessage];
   const availableFunctions = {
     // ...getFileListFromPullRequestHandler(gitApi, pullRequest),
-    ...getPullRequestDetailsHandler(gitApi, pullRequest),
+    ...getPullRequestDetailsHandler(pullRequest),
     ...getPullRequestFileContentHandler(gitApi, pullRequest),
   };
 
@@ -84,6 +84,8 @@ ${files.map(file => `- ${file}`).join('\n')}
       },
     });
 
+    messages.push(response.message);
+
     let output: string;
     if (response.message.tool_calls) {
       // Process tool calls from the response
@@ -100,7 +102,6 @@ ${files.map(file => `- ${file}`).join('\n')}
           console.log('Function output:', output);
 
           // Add the function response to messages for the model to use
-          messages.push(response.message);
           messages.push({
             role: 'tool',
             content: output.toString(),
@@ -112,8 +113,6 @@ ${files.map(file => `- ${file}`).join('\n')}
       }
     } else {
       isCompleted = true;
-      messages.push(response.message);
-      console.log('No tool calls returned from model');
     }
   }
   console.log('>'.repeat(80));
