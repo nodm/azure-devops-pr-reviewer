@@ -1,8 +1,9 @@
 import type {IGitApi} from 'azure-devops-node-api/GitApi';
 import type {GitPullRequest} from 'azure-devops-node-api/interfaces/GitInterfaces';
+import type {Tool} from 'ollama';
 import {getPullRequestChanges} from '../../azureDevopsGit';
 
-export const getPullRequestDetailsTool = {
+export const getPullRequestDetailsTool: Tool = {
   type: 'function',
   function: {
     name: 'get_pull_request_details',

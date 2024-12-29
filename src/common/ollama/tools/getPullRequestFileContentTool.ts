@@ -1,7 +1,8 @@
 import {type IGitApi} from 'azure-devops-node-api/GitApi';
 import {type GitPullRequest} from 'azure-devops-node-api/interfaces/GitInterfaces';
+import type {Tool} from 'ollama';
 import {getFileContent} from '../../azureDevopsGit';
-export const getPullRequestFileContentTool = {
+export const getPullRequestFileContentTool: Tool = {
   type: 'function',
   function: {
     name: 'get_pull_request_file_content',
