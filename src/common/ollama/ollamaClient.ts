@@ -1,5 +1,5 @@
 import {Ollama} from 'ollama';
-import {getEnvVariable} from './getEnvVariable';
+import {getEnvVariable} from '../getEnvVariable';
 
 const host = getEnvVariable('OLLAMA_API_URL');
 

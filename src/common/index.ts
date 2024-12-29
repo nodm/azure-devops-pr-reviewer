@@ -8,4 +8,4 @@ export {
   getPullRequestChanges,
   getFileContent,
 } from './gitApi';
-export {ollama, ollamaModel} from './ollamaClient';
+export {ollama, ollamaModel} from './ollama';
