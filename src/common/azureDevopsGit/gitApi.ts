@@ -2,7 +2,6 @@ import {WebApi} from 'azure-devops-node-api/WebApi';
 import {type IGitApi} from 'azure-devops-node-api/GitApi';
 import {
   GitVersionType,
-  type Comment,
   type GitPullRequest,
   type GitPullRequestSearchCriteria,
   type GitRepository,
@@ -21,6 +20,15 @@ export async function getRepositories(
   const repositories = await gitApi.getRepositories(project);
 
   return repositories;
+}
+
+export async function getRepository(
+  gitApi: IGitApi,
+  repositoryId: string,
+): Promise<GitRepository> {
+  const repository = await gitApi.getRepository(repositoryId);
+
+  return repository;
 }
 
 export async function getPullRequests(

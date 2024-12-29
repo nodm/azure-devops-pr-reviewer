@@ -11,7 +11,7 @@ export async function getApi() {
   const connection = new WebApi(collectionUrl, authHandler);
   const connectionData: ConnectionData = await connection.connect();
 
-  console.log(`Hello ${connectionData.authenticatedUser?.providerDisplayName}`);
+  console.log(`Hello ${connectionData.authenticatedUser?.customDisplayName}!`);
 
   return connection;
 }
