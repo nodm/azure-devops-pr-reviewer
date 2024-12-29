@@ -1,4 +1,8 @@
 export {
+  getFileListFromPullRequestTool,
+  getFileListFromPullRequestHandler,
+} from './getFilesFromPullRequestTool';
+export {
   getPullRequestDetailsTool,
   getPullRequestDetailsHandler,
 } from './getPullRequestDetailsTool';
