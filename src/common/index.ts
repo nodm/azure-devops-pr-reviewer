@@ -1,11 +1,11 @@
-export {getApi} from './getApi';
 export {getEnvVariable} from './getEnvVariable';
 export {
   createComment,
+  getApi,
+  getFileContent,
   getGitApi,
+  getPullRequestChanges,
   getPullRequests,
   getRepositories,
-  getPullRequestChanges,
-  getFileContent,
-} from './gitApi';
+} from './azureDevopsGit';
 export {ollama, ollamaModel} from './ollama';
