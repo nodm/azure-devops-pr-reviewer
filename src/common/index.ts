@@ -3,6 +3,7 @@ export {
   createComment,
   getApi,
   getFileContent,
+  getFileDiff,
   getGitApi,
   getPullRequestChanges,
   getPullRequests,

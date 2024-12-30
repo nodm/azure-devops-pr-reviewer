@@ -129,6 +129,33 @@ export async function getFileContent(
   return content.toString('utf-8');
 }
 
+export async function getFileDiff(
+  gitApi: IGitApi,
+  pullRequest: GitPullRequest,
+  path: string,
+) {
+  if (!pullRequest.repository?.id) {
+    throw new Error('Repository ID is required');
+  }
+  if (!pullRequest.repository?.project?.id) {
+    throw new Error('Project ID is required');
+  }
+
+  const repositoryId = pullRequest.repository.id;
+  const projectId = pullRequest.repository.project.id;
+
+  const d = await gitApi.getFileDiffs(
+    {
+      fileDiffParams: [{path}],
+      baseVersionCommit: pullRequest.lastMergeSourceCommit?.commitId,
+      targetVersionCommit: pullRequest.lastMergeTargetCommit?.commitId,
+    },
+    projectId,
+    repositoryId,
+  );
+  return d;
+}
+
 export async function createComment(
   gitApi: IGitApi,
   pullRequest: GitPullRequest,
