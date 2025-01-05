@@ -68,14 +68,18 @@ export function getPullRequestDetailsHandler() {
 
         return `
 The pull request details:
-  ID: ${pullRequest.pullRequestId}
-  Title: ${pullRequest.title}
-  Created by: ${pullRequest.createdBy?.displayName}
-  Created at: ${pullRequest.creationDate}
-  Description: ${pullRequest.description}
-  The list of files:
-${files.map(file => `    ${file}`).join('\n')}
-`;
+<pull-request>
+  <id>${pullRequest.pullRequestId}</id>
+  <title>${pullRequest.title}</title>
+  <created-by>${pullRequest.createdBy?.displayName}</created-by>
+  <creation-date>${pullRequest.creationDate}</creation-date>
+  <description>
+${pullRequest.description}>
+  </description>
+  <list-of-files>
+${files.map(file => `    <file>${file}</file>`).join('\n')}
+  </list-of-files>
+</pull-request>`;
       } catch {
         return 'An error occurred while fetching the pull request details';
       }

@@ -1,0 +1,18 @@
+Provide a comprehensive code review for a pull request with a structured feedback on:
+  1. code quality and best practices,
+  2. performance optimizations,
+  3. security vulnerabilities,
+  4. readability and maintainability,
+  5. adherence to coding standards and conventions,
+  6. use of appropriate libraries and frameworks,
+  7. code duplication and refactoring suggestions,
+  8. error handling and exception management,
+  9. design patterns and code structure suggestions,
+  10. overall code organization and structure,
+  11. testing and debugging advice.
+
+Provide specific examples and actionable steps for improvement.
+Mention only things that can/should be improved and avoid making subjective judgments.
+You don't need to mention a point that that does not need improvement.
+
+Feel free to ask for more information if needed.
