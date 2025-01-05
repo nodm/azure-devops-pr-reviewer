@@ -2,7 +2,12 @@ import {getPersonalAccessTokenHandler, WebApi} from 'azure-devops-node-api';
 import {ConnectionData} from 'azure-devops-node-api/interfaces/LocationsInterfaces';
 import {getEnvVariable} from '../getEnvVariable';
 
-export async function getApi() {
+let apiInstance: WebApi | null = null;
+export async function getAzureDevopsApi() {
+  if (apiInstance) {
+    return apiInstance;
+  }
+
   const personalAccessToken = getEnvVariable(
     'AZURE_DEVOPS_PERSONAL_ACCESS_TOKEN',
   );
@@ -13,5 +18,6 @@ export async function getApi() {
 
   console.log(`Hello ${connectionData.authenticatedUser?.customDisplayName}!`);
 
-  return connection;
+  apiInstance = connection;
+  return apiInstance;
 }

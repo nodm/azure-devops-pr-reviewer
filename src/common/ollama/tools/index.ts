@@ -1,12 +1,20 @@
 export {
-  getFileListFromPullRequestTool,
-  getFileListFromPullRequestHandler,
-} from './getFilesFromPullRequestTool';
+  addCommentToPullRequestHandler,
+  addCommentToPullRequestTool,
+} from './addCommentToPullRequest';
 export {
-  getPullRequestDetailsTool,
   getPullRequestDetailsHandler,
-} from './getPullRequestDetailsTool';
+  getPullRequestDetailsTool,
+} from './getPullRequestDetails';
 export {
-  getPullRequestFileContentTool,
   getPullRequestFileContentHandler,
-} from './getPullRequestFileContentTool';
+  getPullRequestFileContentTool,
+} from './getPullRequestFileContent';
+export {
+  getPullRequestListHandler,
+  getPullRequestListTool,
+} from './getPullRequestList';
+export {
+  getRepositoryListHandler,
+  getRepositoryListTool,
+} from './getRepositoryList';

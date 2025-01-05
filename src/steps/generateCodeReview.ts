@@ -1,21 +1,26 @@
-import type {IGitApi} from 'azure-devops-node-api/GitApi';
-import type {GitPullRequest} from 'azure-devops-node-api/interfaces/GitInterfaces';
 import type {Message} from 'ollama';
-import {ollama, ollamaModel as model, getPullRequestChanges} from '../common';
+import {ollama, ollamaModel as model} from '../common';
 import {
-  // getFileListFromPullRequestTool,
-  // getFileListFromPullRequestHandler,
-  getPullRequestDetailsTool,
+  // addCommentToPullRequestHandler,
+  // addCommentToPullRequestTool,
   getPullRequestDetailsHandler,
-  getPullRequestFileContentTool,
+  getPullRequestDetailsTool,
   getPullRequestFileContentHandler,
+  getPullRequestListHandler,
+  getPullRequestFileContentTool,
+  getPullRequestListTool,
+  getRepositoryListHandler,
+  getRepositoryListTool,
 } from '../common/ollama/tools';
 
 const systemMessage: Message = {
   role: 'system',
   content: `
     You are a helpful coding assistant who specializes in code reviews.
+
     You are proficient in:
+      - HTML,
+      - CSS,
       - JavaScript,
       - TypeScript,
       - React,
@@ -27,23 +32,17 @@ const systemMessage: Message = {
       - REact Testing Library,
       - WEB standards,
       - WEB security,
-      - software design patterns.`,
+      - software design patterns.
+
+    Azure DevOpes is used for version control and CI/CD.
+    You can retrieve information about repositories, pull requests and files in the repository.`,
 };
 
-export async function generateCodeReview(
-  gitApi: IGitApi,
-  pullRequest: GitPullRequest,
-) {
-  const changes = await getPullRequestChanges(gitApi, pullRequest);
-  const files = changes
-    .filter(change => Boolean(change.item))
-    .map(change => change.item!.path)
-    .filter(Boolean);
-
+export async function generateCodeReview() {
   const userMessage: Message = {
     role: 'user',
     content: `
-Provide a comprehensive code review for the pull request with ID=${pullRequest.pullRequestId} with a structured feedback on:
+Provide a comprehensive code review for a pull request with a structured feedback on:
   1. code quality and best practices,
   2. performance optimizations,
   3. security vulnerabilities,
@@ -57,17 +56,25 @@ Provide a comprehensive code review for the pull request with ID=${pullRequest.p
   11. testing and debugging advice.
 
 Provide specific examples and actionable steps for improvement.
-Mention only things that can/should be improved and avoid making subjective judgments. You don't need to mention a point that that does not need improvement.
+Mention only things that can/should be improved and avoid making subjective judgments.
+You don't need to mention a point that that does not need improvement.
 
-Also provide a review for each file in the pull request. Here is the list of files:
-${files.map(file => ` - ${file}`).join('\n')}
-`,
+Feel free to ask for more information if needed.`,
   };
   const messages: Message[] = [systemMessage, userMessage];
+
+  const tools = [
+    // addCommentToPullRequestTool,
+    getPullRequestDetailsTool,
+    getPullRequestFileContentTool,
+    getPullRequestListTool,
+    getRepositoryListTool,
+  ];
   const availableFunctions = {
-    // ...getFileListFromPullRequestHandler(gitApi, pullRequest),
-    ...getPullRequestDetailsHandler(pullRequest),
-    ...getPullRequestFileContentHandler(gitApi, pullRequest),
+    ...getPullRequestDetailsHandler(),
+    ...getPullRequestFileContentHandler(),
+    ...getPullRequestListHandler(),
+    ...getRepositoryListHandler(),
   };
 
   let isCompleted = false;
@@ -75,7 +82,7 @@ ${files.map(file => ` - ${file}`).join('\n')}
     const response = await ollama.chat({
       model,
       messages,
-      tools: [getPullRequestDetailsTool, getPullRequestFileContentTool],
+      tools,
       // stream: true,
       options: {
         temperature: 0.1,
@@ -94,11 +101,14 @@ ${files.map(file => ` - ${file}`).join('\n')}
         if (functionToCall) {
           console.log('Calling function:', tool.function.name);
           console.log('Arguments:', tool.function.arguments);
-          output = await functionToCall(
-            tool.function.arguments as {
-              file: string;
-            },
-          );
+          const args = {
+            repositoryId: tool.function.arguments.repositoryId || '',
+            pullRequestId: tool.function.arguments.pullRequestId || 0,
+            file: tool.function.arguments.file || '',
+            project: tool.function.arguments.project || '',
+            ...tool.function.arguments,
+          };
+          output = await functionToCall(args);
           console.log('Function output:', output);
 
           // Add the function response to messages for the model to use
