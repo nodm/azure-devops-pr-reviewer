@@ -5,13 +5,14 @@ export const getRepositoryListTool: Tool = {
   type: 'function',
   function: {
     name: 'get-repository-list',
-    description: 'Get a list of repositories in a project from Azure DevOps',
+    description:
+      'Get a list of repositories from Azure DevOps by the project ID',
     parameters: {
       type: 'object',
       properties: {
-        project: {type: 'string', description: 'The project name'},
+        projectId: {type: 'string', description: 'The project ID'},
       },
-      required: ['project'],
+      required: ['projectId'],
     },
   },
 };
@@ -19,17 +20,18 @@ export const getRepositoryListTool: Tool = {
 export function getRepositoryListHandler() {
   return {
     [getRepositoryListTool.function.name]: async ({
-      project,
+      projectId,
     }: {
-      project: string;
+      projectId: string;
     }) => {
       try {
         const azureDevOpsApi = await getAzureDevopsApi();
         const azureDevopsGitApi = await getAzureDevopsGitApi(azureDevOpsApi);
-        const repositoryList = await azureDevopsGitApi.getRepositories(project);
+        const repositoryList =
+          await azureDevopsGitApi.getRepositories(projectId);
 
         return `
-The following repositories are available in the project "${project}":
+The following repositories are available in the project "${projectId}":
 |Repository ID| Repository Name |
 |-------------|-----------------|
 ${repositoryList.map(repo => `|${repo.id}| ${repo.name} |`).join('\n')}

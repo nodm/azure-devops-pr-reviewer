@@ -24,7 +24,7 @@ const systemMessage: Message = {
   role: 'system',
   content: createPrompt('system', {projectName}),
 };
-
+console.log(systemMessage.content);
 // Provide a list of available repositories, let me choose one. It can be an ordered list of repo names and I will select one. For now let's pretend that I've chosen "saturn-frontend-web" repo with ID "1b91bb40-350c-479a-b898-6654071c91a4".
 // Then provide a list of pull requests in the selected repo to choose one for review. For now let's pretend that I've chosen "36736: Add matchNonAbortedOrConditionallySkipped matcher and enhance error handling in createApiErrorReducerBuilder" pull request with ID 13329.
 export async function generateCodeReview() {
@@ -48,7 +48,7 @@ export async function generateCodeReview() {
     ...getRepositoryListHandler(),
   };
 
-  let isCompleted = false;
+  const isCompleted = false;
   while (!isCompleted) {
     const response = await ollama.chat({
       model,
@@ -80,7 +80,7 @@ export async function generateCodeReview() {
             repositoryId: tool.function.arguments.repositoryId || '',
             pullRequestId: tool.function.arguments.pullRequestId || 0,
             file: tool.function.arguments.file || '',
-            project: tool.function.arguments.project || '',
+            projectId: tool.function.arguments.projectId || '',
             ...tool.function.arguments,
           };
           output = await functionToCall(args);
@@ -97,9 +97,19 @@ export async function generateCodeReview() {
         }
       }
     } else {
-      isCompleted = true;
+      console.log(response.message.content);
+      if (response.message.content.includes('saturn-frontend-web')) {
+        messages.push({
+          role: 'user',
+          content: 'saturn-frontend-web',
+        });
+      } else {
+        // return;
+      }
+      // isCompleted = true;
     }
   }
-  console.log('>'.repeat(80));
+
+  console.log('='.repeat(100));
   console.log(JSON.stringify(messages, null, 2));
 }
