@@ -1,11 +1,3 @@
-export {getApi} from './getApi';
+export {createPrompt} from './createPrompt';
 export {getEnvVariable} from './getEnvVariable';
-export {
-  createComment,
-  getGitApi,
-  getPullRequests,
-  getRepositories,
-  getPullRequestChanges,
-  getFileContent,
-} from './gitApi';
-export {ollama, ollamaModel} from './ollamaClient';
+export {ollama, ollamaModel} from './ollama';
