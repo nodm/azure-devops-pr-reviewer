@@ -6,7 +6,7 @@ export const getRepositoryListTool: Tool = {
   function: {
     name: 'get-repository-list',
     description:
-      'Get a list of repositories from Azure DevOps by the project ID',
+      'Get a list of repositories from Azure DevOps Git by the project ID',
     parameters: {
       type: 'object',
       properties: {
@@ -31,10 +31,11 @@ export function getRepositoryListHandler() {
           await azureDevopsGitApi.getRepositories(projectId);
 
         return `
-The following repositories are available in the project "${projectId}":
-|Repository ID| Repository Name |
-|-------------|-----------------|
-${repositoryList.map(repo => `|${repo.id}| ${repo.name} |`).join('\n')}
+The list of the repositories available in the project "${projectId}" is provided in the table below:
+
+| Repository ID to use in requests | Repository Name |
+|----------------------------------|-----------------|
+${repositoryList.map(repo => `|${repo.id}|${repo.name}|`).join('\n')} 
 `;
       } catch {
         return 'An error occurred while fetching the repositories';

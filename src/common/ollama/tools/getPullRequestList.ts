@@ -7,7 +7,7 @@ export const getPullRequestListTool: Tool = {
   function: {
     name: 'get-pull-request-list',
     description:
-      'Get a list of pull requests from Azure DevOps by a repository ID ',
+      'Get a list of pull requests from Azure DevOps Git by a repository ID ',
     parameters: {
       type: 'object',
       properties: {

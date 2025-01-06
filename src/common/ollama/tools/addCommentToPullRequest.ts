@@ -5,7 +5,7 @@ export const addCommentToPullRequestTool: Tool = {
   type: 'function',
   function: {
     name: 'add-comment-to-pull-request',
-    description: 'Add a comment to a pull request.',
+    description: 'Add a comment to a pull request in the Azure DevOps Git',
     parameters: {
       type: 'object',
       properties: {

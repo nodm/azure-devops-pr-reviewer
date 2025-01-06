@@ -5,7 +5,8 @@ export const getPullRequestDetailsTool: Tool = {
   type: 'function',
   function: {
     name: 'get-pull-request-details',
-    description: 'Get details about a pull request including the list of files',
+    description:
+      'Get details about a pull request including the list of files from the Azure DevOps Git',
     parameters: {
       type: 'object',
       properties: {

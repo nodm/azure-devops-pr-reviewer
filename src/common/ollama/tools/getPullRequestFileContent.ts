@@ -6,7 +6,8 @@ export const getPullRequestFileContentTool: Tool = {
   type: 'function',
   function: {
     name: 'get-pull-request-file-content',
-    description: 'Get the content of a file in the a pull request',
+    description:
+      'Get the content of a file in the a pull request from the Azure DevOps Git',
     parameters: {
       type: 'object',
       properties: {
