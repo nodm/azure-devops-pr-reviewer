@@ -1,3 +1,5 @@
+import {input} from '@inquirer/prompts';
+import {writeFileSync} from 'node:fs';
 import type {Message} from 'ollama';
 import {
   ollama,
@@ -6,8 +8,8 @@ import {
   createPrompt,
 } from '../common';
 import {
-  // addCommentToPullRequestHandler,
-  // addCommentToPullRequestTool,
+  addCommentToPullRequestHandler,
+  addCommentToPullRequestTool,
   getPullRequestDetailsHandler,
   getPullRequestDetailsTool,
   getPullRequestFileContentHandler,
@@ -20,13 +22,18 @@ import {
 
 const projectName = getEnvVariable('AZURE_DEVOPS_PROJECT_NAME');
 
+let temperature = 0;
+try {
+  temperature = parseFloat(getEnvVariable('OLLAMA_TEMPERATURE'));
+} catch {
+  // Default value is used if the environment variable is not set
+}
+
 const systemMessage: Message = {
   role: 'system',
   content: createPrompt('system', {projectName}),
 };
-console.log(systemMessage.content);
-// Provide a list of available repositories, let me choose one. It can be an ordered list of repo names and I will select one. For now let's pretend that I've chosen "saturn-frontend-web" repo with ID "1b91bb40-350c-479a-b898-6654071c91a4".
-// Then provide a list of pull requests in the selected repo to choose one for review. For now let's pretend that I've chosen "36736: Add matchNonAbortedOrConditionallySkipped matcher and enhance error handling in createApiErrorReducerBuilder" pull request with ID 13329.
+
 export async function generateCodeReview() {
   const userMessage: Message = {
     role: 'user',
@@ -35,13 +42,14 @@ export async function generateCodeReview() {
   const messages: Message[] = [systemMessage, userMessage];
 
   const tools = [
-    // addCommentToPullRequestTool,
+    addCommentToPullRequestTool,
     getPullRequestDetailsTool,
     getPullRequestFileContentTool,
     getPullRequestListTool,
     getRepositoryListTool,
   ];
   const availableFunctions = {
+    ...addCommentToPullRequestHandler(),
     ...getPullRequestDetailsHandler(),
     ...getPullRequestFileContentHandler(),
     ...getPullRequestListHandler(),
@@ -56,7 +64,7 @@ export async function generateCodeReview() {
       tools,
       // stream: true,
       options: {
-        temperature: 0.1,
+        temperature,
         top_p: 0.7,
         // num_ctx: ctx,
       },
@@ -81,6 +89,7 @@ export async function generateCodeReview() {
             pullRequestId: tool.function.arguments.pullRequestId || 0,
             file: tool.function.arguments.file || '',
             projectId: tool.function.arguments.projectId || '',
+            comment: tool.function.arguments.comment || '',
             ...tool.function.arguments,
           };
           output = await functionToCall(args);
@@ -97,19 +106,31 @@ export async function generateCodeReview() {
         }
       }
     } else {
-      console.log(response.message.content);
-      if (response.message.content.includes('saturn-frontend-web')) {
-        messages.push({
-          role: 'user',
-          content: 'saturn-frontend-web',
-        });
-      } else {
-        // return;
+      console.log(`\x1b[32m${response.message.content}\x1b[0m`);
+
+      const userInput = await input({message: '>>>'});
+      if (userInput === '/bye') {
+        // save the chat to the file
+        writeFileSync(
+          'chat.txt',
+          JSON.stringify(
+            messages.map(message => `${message.role}: ${message.content}`),
+            null,
+            2,
+          ),
+          'utf-8',
+        );
+
+        return;
       }
-      // isCompleted = true;
+
+      messages.push({
+        role: 'user',
+        content: userInput,
+      });
     }
   }
 
-  console.log('='.repeat(100));
-  console.log(JSON.stringify(messages, null, 2));
+  // console.log('='.repeat(100));
+  // console.log(JSON.stringify(messages, null, 2));
 }
