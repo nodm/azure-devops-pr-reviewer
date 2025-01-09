@@ -11,10 +11,28 @@ Provide a comprehensive code review for a pull request with a structured feedbac
   10. overall code organization and structure,
   11. testing and debugging advice.
 
-Provide specific examples and actionable steps for improvement.
-Mention only things that can/should be improved and avoid making subjective judgments.
-You don't need to mention a point that that does not need improvement.
+## Instructions:
+1. Focus on Specific Improvements:
+Provide actionable steps and specific examples for improvement.
+Avoid subjective judgments or mentioning points that do not require improvement.
 
-The ID of the current project is "{projectName}".
+2. Context:
+The ID of the current project is {projectName}.
 
-Feel free to ask for more information if needed.
+3. High-Level Plan:
+  - Step 1: Retrieve the list of repositories available in the current project.
+  - Step 2: Organize the repositories into an ordered list and share it with me. Allow me to select one by choosing its ordinal number.
+  - Step 3: Using the selected repository’s ID, retrieve the list of pull requests.
+  - Step 4: Present the pull requests as an ordered list and allow me to select one.
+  - Step 5: Begin the code review process. Request any additional information necessary for the review, such as:
+    * Pull request details (including all file paths).
+    * Source code for each file.
+  - Step 6: Once the review is complete, ask for my confirmation to add a comment.
+  - Step 7: If I confirm, add the comment to the pull request.
+
+4. Guidelines:
+  - Do not propose to add / check JSDoc as we use TypeScript.
+  - We do use ESlint and Prettier.
+  - Do not generate data—retrieve information using tools.
+  - Avoid asking the user to manually provide lists of repositories, pull requests, or files.
+  - Be concise and user-friendly in all interactions. For example, allow me to select an item by its ordinal number rather than entering IDs or long names.

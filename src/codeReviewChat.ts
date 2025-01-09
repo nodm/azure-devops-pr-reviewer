@@ -30,7 +30,12 @@ export async function codeReviewChat() {
     });
     await chatMessageHistory.addMessage(aiMessage);
 
-    if (aiMessage.tool_calls) {
+    if (aiMessage.content) {
+      console.log(`\x1b[32m${aiMessage.content}\x1b[0m`);
+      // console.log(aiMessage);
+    }
+
+    if (aiMessage.tool_calls && aiMessage.tool_calls.length > 0) {
       for (const toolCall of aiMessage.tool_calls) {
         const selectedTool = azureDevOpsTools.find(
           tool => tool.name === toolCall.name,
@@ -39,6 +44,7 @@ export async function codeReviewChat() {
           console.log('>>>', 'Calling tool:', selectedTool.name, toolCall.args);
           const toolMessage = await selectedTool.invoke(toolCall);
           console.log('>>>', 'Calling tool:', selectedTool.name, 'done');
+          // console.log(toolMessage.content);
           await chatMessageHistory.addMessage(toolMessage);
         } else {
           // TODO
@@ -46,8 +52,6 @@ export async function codeReviewChat() {
         }
       }
     } else {
-      console.log(`\x1b[32m${aiMessage.content}\x1b[0m`);
-
       const userInput = await input({message: '>>>'});
 
       if (userInput !== '/bye') {
@@ -56,6 +60,7 @@ export async function codeReviewChat() {
         isCompleted = true;
       }
     }
+    // console.log(await chatMessageHistory.getMessages());
   }
 
   console.log(await chatMessageHistory.getMessages());
