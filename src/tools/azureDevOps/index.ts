@@ -1,5 +1,12 @@
-export {addCommentToAzureDevOpsPullRequestTool} from './addCommentToPullRequest';
-export {getAzureDevOpsPullRequestDetailsTool} from './getPullRequestDetails';
-export {getAzureDevOpsPullRequestFileContentTool} from './getPullRequestFileContent';
-export {getAzureDevOpsPullRequestListTool} from './getPullRequestList';
-export {getAzureDevOpsRepositoryListTool} from './getRepositoryList';
+import {addCommentToAzureDevOpsPullRequestTool} from './addCommentToPullRequest';
+import {getAzureDevOpsPullRequestDetailsTool} from './getPullRequestDetails';
+import {getAzureDevOpsPullRequestFileContentTool} from './getPullRequestFileContent';
+import {getAzureDevOpsPullRequestListTool} from './getPullRequestList';
+import {getAzureDevOpsRepositoryListTool} from './getRepositoryList';
+export const azureDevOpsTools = [
+  getAzureDevOpsRepositoryListTool,
+  getAzureDevOpsPullRequestListTool,
+  getAzureDevOpsPullRequestDetailsTool,
+  getAzureDevOpsPullRequestFileContentTool,
+  addCommentToAzureDevOpsPullRequestTool,
+];
