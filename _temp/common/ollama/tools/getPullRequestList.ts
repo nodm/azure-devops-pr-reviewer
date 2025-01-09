@@ -1,6 +1,6 @@
 import type {Tool} from 'ollama';
 import {getAzureDevopsApi, getAzureDevopsGitApi} from '../../azureDevopsGit';
-import {getEnvVariable} from '../../getEnvVariable';
+import {getEnvVariable} from '../../../../src/common/getEnvVariable';
 
 export const getPullRequestListTool: Tool = {
   type: 'function',

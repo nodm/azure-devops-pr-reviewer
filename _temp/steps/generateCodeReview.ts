@@ -6,7 +6,7 @@ import {
   ollamaModel as model,
   getEnvVariable,
   createPrompt,
-} from '../common';
+} from '../../src/common';
 import {
   addCommentToPullRequestHandler,
   addCommentToPullRequestTool,
