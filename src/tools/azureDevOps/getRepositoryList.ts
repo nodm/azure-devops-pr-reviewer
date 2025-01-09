@@ -1,8 +1,8 @@
 import {tool} from '@langchain/core/tools';
 import {z} from 'zod';
-import {getAzureDevopsApi, getAzureDevopsGitApi} from '../azureDevopsGit';
+import {getAzureDevopsApi, getAzureDevopsGitApi} from '../../azureDevopsGit';
 
-const getAzureDevOpsRepositoryListSchema = z.object({
+const schema = z.object({
   projectId: z.string().describe('The project ID to get the repositories from'),
 });
 
@@ -12,7 +12,7 @@ export const getAzureDevOpsRepositoryListTool = tool(
     name: 'getAzureDevOpsRepositoryList',
     description:
       'Get a list of repositories from Azure DevOps Git by the project ID',
-    schema: getAzureDevOpsRepositoryListSchema,
+    schema,
   },
 );
 

@@ -1,1 +1,1 @@
-export {getAzureDevOpsRepositoryListTool} from './getAzureDevOpsRepositoryList';
+export * from './azureDevOps';
