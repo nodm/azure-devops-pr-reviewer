@@ -1,19 +1,21 @@
+import {input} from '@inquirer/prompts';
 import {ChatPromptTemplate, MessagesPlaceholder} from '@langchain/core/prompts';
 import {ChatMessageHistory} from 'langchain/stores/message/in_memory';
 import {getEnvVariable} from './common';
 import {llm} from './models/ollama';
 import {systemPromptTemplate, userPromptTemplate} from './prompts';
-import {getAzureDevOpsRepositoryListTool} from './tools';
+import {azureDevOpsTools} from './tools';
+import {HumanMessage} from '@langchain/core/messages';
 
 const projectName = getEnvVariable('AZURE_DEVOPS_PROJECT_NAME');
 export async function codeReviewChat() {
   const chatMessageHistory = new ChatMessageHistory();
+  await chatMessageHistory.addMessage(await systemPromptTemplate.format({}));
   await chatMessageHistory.addMessage(
-    await systemPromptTemplate.format({projectName}),
+    await userPromptTemplate.format({projectName}),
   );
-  await chatMessageHistory.addMessage(await userPromptTemplate.format({}));
 
-  const llmWithTools = llm.bindTools([getAzureDevOpsRepositoryListTool]);
+  const llmWithTools = llm.bindTools([...azureDevOpsTools]);
 
   const prompt = ChatPromptTemplate.fromMessages([
     // await systemPromptTemplate.format({projectName}),
@@ -21,11 +23,40 @@ export async function codeReviewChat() {
   ]);
   const chain = prompt.pipe(llmWithTools);
 
-  const responseMessage = await chain.invoke({
-    messages: await chatMessageHistory.getMessages(),
-  });
+  let isCompleted = false;
+  while (!isCompleted) {
+    const aiMessage = await chain.invoke({
+      messages: await chatMessageHistory.getMessages(),
+    });
+    await chatMessageHistory.addMessage(aiMessage);
 
-  await chatMessageHistory.addMessage(responseMessage);
+    if (aiMessage.tool_calls) {
+      for (const toolCall of aiMessage.tool_calls) {
+        const selectedTool = azureDevOpsTools.find(
+          tool => tool.name === toolCall.name,
+        );
+        if (selectedTool) {
+          console.log('>>>', 'Calling tool:', selectedTool.name, toolCall.args);
+          const toolMessage = await selectedTool.invoke(toolCall);
+          console.log('>>>', 'Calling tool:', selectedTool.name, 'done');
+          await chatMessageHistory.addMessage(toolMessage);
+        } else {
+          // TODO
+          console.log('Tool not found');
+        }
+      }
+    } else {
+      console.log(`\x1b[32m${aiMessage.content}\x1b[0m`);
+
+      const userInput = await input({message: '>>>'});
+
+      if (userInput !== '/bye') {
+        await chatMessageHistory.addMessage(new HumanMessage(userInput));
+      } else {
+        isCompleted = true;
+      }
+    }
+  }
 
   console.log(await chatMessageHistory.getMessages());
 }
