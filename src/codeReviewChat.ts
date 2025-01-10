@@ -5,22 +5,22 @@ import {getEnvVariable} from './common';
 import {llm} from './models/ollama';
 import {systemPromptTemplate, userPromptTemplate} from './prompts';
 import {azureDevOpsTools} from './tools';
-import {HumanMessage} from '@langchain/core/messages';
+import {HumanMessage, ToolMessage} from '@langchain/core/messages';
 
 const projectName = getEnvVariable('AZURE_DEVOPS_PROJECT_NAME');
+const repositoryName = getEnvVariable('AZURE_DEVOPS_PROJECT_NAME', '');
 export async function codeReviewChat() {
   console.log(`\x1b[32mHello from ${getEnvVariable('OLLAMA_MODEL')}!\x1b[0m`);
 
   const chatMessageHistory = new ChatMessageHistory();
   await chatMessageHistory.addMessage(await systemPromptTemplate.format({}));
   await chatMessageHistory.addMessage(
-    await userPromptTemplate.format({projectName}),
+    await userPromptTemplate.format({projectName, repositoryName}),
   );
 
   const llmWithTools = llm.bindTools([...azureDevOpsTools]);
 
   const prompt = ChatPromptTemplate.fromMessages([
-    // await systemPromptTemplate.format({projectName}),
     new MessagesPlaceholder('messages'),
   ]);
   const chain = prompt.pipe(llmWithTools);
@@ -34,7 +34,6 @@ export async function codeReviewChat() {
 
     if (aiMessage.content) {
       console.log(`\x1b[32m${aiMessage.content}\x1b[0m`);
-      // console.log(aiMessage);
     }
 
     if (aiMessage.tool_calls && aiMessage.tool_calls.length > 0) {
@@ -46,7 +45,7 @@ export async function codeReviewChat() {
           console.log('>>>', 'Calling tool:', selectedTool.name, toolCall.args);
           const toolMessage = await selectedTool.invoke(toolCall);
           console.log('>>>', 'Calling tool:', selectedTool.name, 'done');
-          // console.log(toolMessage.content);
+
           await chatMessageHistory.addMessage(toolMessage);
         } else {
           // TODO
@@ -62,7 +61,6 @@ export async function codeReviewChat() {
         isCompleted = true;
       }
     }
-    // console.log(await chatMessageHistory.getMessages());
   }
 
   console.log(await chatMessageHistory.getMessages());
