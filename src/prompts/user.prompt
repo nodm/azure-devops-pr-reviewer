@@ -21,7 +21,7 @@ The ID of the current project is {projectName}.
 
 3. High-Level Plan:
   - Step 1: Retrieve the list of repositories available in the current project.
-  - Step 2: Organize the repositories into an ordered list and share it with me. Allow me to select one by choosing its ordinal number.
+  - Step 2: I usually work with the repository named "saturn-frontend-web". If it is on the list just ask me to confirm the usage of it. Otherwise create an ordered list of available repositories, provide it to me and let me select one by entering its ordinal number.
   - Step 3: Using the selected repository’s ID, retrieve the list of pull requests.
   - Step 4: Present the pull requests as an ordered list and allow me to select one.
   - Step 5: Begin the code review process. Request any additional information necessary for the review, such as:
