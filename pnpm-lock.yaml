@@ -11,6 +11,9 @@ importers:
       '@inquirer/prompts':
         specifier: ^7.2.1
         version: 7.2.1(@types/node@22.10.2)
+      '@inquirer/select':
+        specifier: ^4.0.4
+        version: 4.0.4(@types/node@22.10.2)
       '@langchain/core':
         specifier: ^0.3.27
         version: 0.3.27(openai@4.77.4(zod@3.24.1))

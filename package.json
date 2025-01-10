@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@inquirer/prompts": "^7.2.1",
+    "@inquirer/select": "^4.0.4",
     "@langchain/core": "^0.3.27",
     "@langchain/openai": "^0.3.16",
     "azure-devops-node-api": "^14.1.0",
