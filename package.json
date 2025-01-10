@@ -39,9 +39,11 @@
   },
   "dependencies": {
     "@inquirer/prompts": "^7.2.1",
-    "@inquirer/select": "^4.0.4",
+    "@langchain/core": "^0.3.27",
+    "@langchain/openai": "^0.3.16",
     "azure-devops-node-api": "^14.1.0",
     "dotenv": "^16.4.7",
-    "ollama": "^0.5.11"
+    "langchain": "^0.3.10",
+    "zod": "^3.24.1"
   }
 }

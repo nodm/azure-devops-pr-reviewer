@@ -1,6 +1,6 @@
 import {getPersonalAccessTokenHandler, WebApi} from 'azure-devops-node-api';
 import {ConnectionData} from 'azure-devops-node-api/interfaces/LocationsInterfaces';
-import {getEnvVariable} from '../getEnvVariable';
+import {getEnvVariable} from '../common';
 
 let apiInstance: WebApi | null = null;
 export async function getAzureDevopsApi() {
