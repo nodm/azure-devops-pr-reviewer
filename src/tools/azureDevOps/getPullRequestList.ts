@@ -21,9 +21,7 @@ export const getAzureDevOpsPullRequestListTool = tool(
 
 async function getAzureDevOpsPullRequestList({
   repositoryId,
-}: {
-  repositoryId: string;
-}) {
+}: z.infer<typeof schema>) {
   try {
     if (!repositoryId) {
       throw new Error('Repository ID is required');

@@ -16,7 +16,9 @@ export const getAzureDevOpsRepositoryListTool = tool(
   },
 );
 
-async function getAzureDevOpsRepositoryList({projectId}: {projectId: string}) {
+async function getAzureDevOpsRepositoryList({
+  projectId,
+}: z.infer<typeof schema>) {
   try {
     const azureDevOpsApi = await getAzureDevopsApi();
     const azureDevopsGitApi = await getAzureDevopsGitApi(azureDevOpsApi);

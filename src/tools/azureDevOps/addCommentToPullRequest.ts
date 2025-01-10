@@ -21,11 +21,7 @@ async function addCommentToAzureDevOpsPullRequest({
   repositoryId,
   pullRequestId,
   comment,
-}: {
-  repositoryId: string;
-  pullRequestId: number;
-  comment: string;
-}) {
+}: z.infer<typeof schema>) {
   try {
     if (!repositoryId) {
       throw new Error('Repository ID is required');

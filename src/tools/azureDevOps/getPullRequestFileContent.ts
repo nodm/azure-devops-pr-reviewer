@@ -23,11 +23,7 @@ async function getAzureDevOpsPullRequestFileContent({
   repositoryId,
   pullRequestId,
   file,
-}: {
-  repositoryId: string;
-  pullRequestId: number;
-  file: string;
-}) {
+}: z.infer<typeof schema>) {
   try {
     if (!repositoryId) {
       throw new Error('Repository ID is required');
