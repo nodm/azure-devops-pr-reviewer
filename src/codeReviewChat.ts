@@ -9,6 +9,8 @@ import {HumanMessage} from '@langchain/core/messages';
 
 const projectName = getEnvVariable('AZURE_DEVOPS_PROJECT_NAME');
 export async function codeReviewChat() {
+  console.log(`\x1b[32mHello from ${getEnvVariable('OLLAMA_MODEL')}!\x1b[0m`);
+
   const chatMessageHistory = new ChatMessageHistory();
   await chatMessageHistory.addMessage(await systemPromptTemplate.format({}));
   await chatMessageHistory.addMessage(
