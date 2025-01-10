@@ -4,8 +4,8 @@ import {ChatMessageHistory} from 'langchain/stores/message/in_memory';
 import {getEnvVariable} from './common';
 import {llm} from './models/ollama';
 import {systemPromptTemplate, userPromptTemplate} from './prompts';
-import {azureDevOpsTools} from './tools';
-import {HumanMessage, ToolMessage} from '@langchain/core/messages';
+import {azureDevOpsTools, uiTools} from './tools';
+import {HumanMessage} from '@langchain/core/messages';
 
 const projectName = getEnvVariable('AZURE_DEVOPS_PROJECT_NAME');
 const repositoryName = getEnvVariable('AZURE_DEVOPS_PROJECT_NAME', '');
@@ -18,7 +18,8 @@ export async function codeReviewChat() {
     await userPromptTemplate.format({projectName, repositoryName}),
   );
 
-  const llmWithTools = llm.bindTools([...azureDevOpsTools]);
+  const tools = [...azureDevOpsTools, ...uiTools];
+  const llmWithTools = llm.bindTools(tools);
 
   const prompt = ChatPromptTemplate.fromMessages([
     new MessagesPlaceholder('messages'),
@@ -38,9 +39,8 @@ export async function codeReviewChat() {
 
     if (aiMessage.tool_calls && aiMessage.tool_calls.length > 0) {
       for (const toolCall of aiMessage.tool_calls) {
-        const selectedTool = azureDevOpsTools.find(
-          tool => tool.name === toolCall.name,
-        );
+        const selectedTool = tools.find(tool => tool.name === toolCall.name);
+
         if (selectedTool) {
           console.log('>>>', 'Calling tool:', selectedTool.name, toolCall.args);
           const toolMessage = await selectedTool.invoke(toolCall);
@@ -49,7 +49,7 @@ export async function codeReviewChat() {
           await chatMessageHistory.addMessage(toolMessage);
         } else {
           // TODO
-          console.log('Tool not found');
+          console.log('Tool not found', toolCall.name);
         }
       }
     } else {
