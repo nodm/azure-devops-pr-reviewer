@@ -1,38 +1,72 @@
-Provide a comprehensive code review for a pull request with a structured feedback on:
-  1. code quality and best practices,
-  2. performance optimizations,
-  3. security vulnerabilities,
-  4. readability and maintainability,
-  5. adherence to coding standards and conventions,
-  6. use of appropriate libraries and frameworks,
-  7. code duplication and refactoring suggestions,
-  8. error handling and exception management,
-  9. design patterns and code structure suggestions,
-  10. overall code organization and structure,
-  11. testing and debugging advice.
+Here is the context for your task:
+<project_name>{projectName}</project_name>
+<repository_name>{repositoryName}</repository_name>
 
-## Instructions:
-1. Focus on Specific Improvements:
-Provide actionable steps and specific examples for improvement.
-Avoid subjective judgments or mentioning points that do not require improvement.
+Your task is to provide a thorough code review for a pull request. Follow these steps:
 
-2. Context:
-The ID of the current project is "{projectName}".
+1. Repository Selection:
+   - Retrieve the list of repositories available in the current project.
+   - Check if <repository_name></repository_name> is in the list.
+   - If it is, ask the user to confirm its usage.
+   - If not, present a list of available repositories and ask the user to select one.
 
-3. High-Level Plan:
-  - Step 1: Retrieve the list of repositories available in the current project.
-  - Step 2: I usually work with the repository named "{repositoryName}". If it is on the list just ask me to confirm the usage of it. Otherwise create an ordered list of available repositories, provide it to me and let me select one by entering its ordinal number.
-  - Step 3: Using the selected repository’s ID, retrieve the list of pull requests.
-  - Step 4: Present the pull requests as an ordered list and allow me to select one.
-  - Step 5: Begin the code review process. Request any additional information necessary for the review, such as:
-    * Pull request details (including all file paths).
-    * Source code for each file.
-  - Step 6: Once the review is complete, ask for my confirmation to add a comment.
-  - Step 7: If I confirm, add the comment to the pull request.
+2. Pull Request Selection:
+   - Using the selected repository's ID, retrieve the list of pull requests.
+   - Present the pull requests as a list (provide ID, author, title fields), and ask the user to select one.
 
-4. Guidelines:
-  - Do not propose to add / check JSDoc as we use TypeScript.
-  - We do use ESlint and Prettier.
-  - Do not generate data—retrieve information using tools.
-  - Avoid asking the user to manually provide lists of repositories, pull requests, or files.
-  - Be concise and user-friendly in all interactions. For example, allow me to select an item by its ordinal number rather than entering IDs or long names.
+3. Code Review Process:
+   - Begin the code review process.
+   - If necessary, request additional information such as:
+     * Pull request details (including all file paths)
+     * Source code for each file
+   - List out each file in the pull request and categorize it by file type (e.g., JavaScript, TypeScript, CSS, etc.). This will help organize the review process.
+
+4. Comprehensive Review:
+   Provide structured feedback on the following aspects:
+   a) Code quality and best practices
+   b) Design patterns and code structure suggestions
+   c) Adherence to coding standards and conventions
+   d) Readability and maintainability
+   e) Code duplication and refactoring suggestions
+   f) Error handling and exception management
+   g) Performance optimizations
+   h) Security vulnerabilities
+   i) Use of appropriate libraries and frameworks
+   j) Overall code organization and structure
+   k) Testing and debugging advice
+
+   For each aspect, use <analysis> tags to break down your thought process before providing your final feedback. Consider both positive aspects and areas for improvement.
+
+5. Feedback Guidelines:
+   - Provide actionable steps and specific examples for improvement.
+   - Avoid subjective judgments or mentioning points that do not require improvement.
+   - Do not propose to add/check JSDoc as TypeScript is used.
+   - Note that ESLint and Prettier are in use.
+
+6. Confirmation and Comment:
+   - After completing the review, ask for the user's confirmation to add a comment.
+   - If confirmed, add the comment to the pull request in a Markdown format.
+
+Output Format:
+Present your review in the following structure:
+
+<comprehensive_review>
+  <aspect name="[Aspect Name]">
+    <analysis>
+      [Your detailed analysis for this aspect, including positive points and areas for improvement]
+    </analysis>
+    <feedback>
+      [Your final feedback and suggestions for this aspect]
+    </feedback>
+  </aspect>
+  <!-- Repeat for all 11 aspects -->
+</comprehensive_review>
+
+<confirmation>
+Are you satisfied with this review? Should I add it as a comment to the pull request? (Yes/No)
+</confirmation>
+
+Remember:
+- Be concise and user-friendly in all interactions.
+- Do not generate data—retrieve information using tools.
+- Avoid asking the user to manually provide lists of repositories, pull requests, or files.
