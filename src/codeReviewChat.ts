@@ -8,7 +8,10 @@ import {azureDevOpsTools, uiTools} from './tools';
 import {HumanMessage} from '@langchain/core/messages';
 
 const projectName = getEnvVariable('AZURE_DEVOPS_PROJECT_NAME');
-const repositoryName = getEnvVariable('AZURE_DEVOPS_PROJECT_NAME', '');
+const repositoryName = getEnvVariable(
+  'AZURE_DEVOPS_DEFAULT_REPOSITORY_NAME',
+  '',
+);
 export async function codeReviewChat() {
   console.log(`\x1b[32mHello from ${getEnvVariable('OLLAMA_MODEL')}!\x1b[0m`);
 
