@@ -1,15 +1,11 @@
-import {llm as anthropic} from './anthropic';
-import {llm as ollama} from './ollama';
-import {llm as openai} from './openai';
-
-export function getLLM(llmProvider: string) {
+export async function getLLM(llmProvider: string) {
   switch (llmProvider) {
     case 'anthropic':
-      return anthropic;
+      return import('./anthropic').then(module => module.llm);
     case 'ollama':
-      return ollama;
+      return import('./ollama').then(module => module.llm);
     case 'openai':
-      return openai;
+      return import('./openai').then(module => module.llm);
     default:
       throw new Error(`No LLM provider found for ${llmProvider}`);
   }

@@ -13,10 +13,10 @@ const repositoryName = getEnvVariable(
   'AZURE_DEVOPS_DEFAULT_REPOSITORY_NAME',
   '',
 );
-
-const llm = getLLM(llmProvider);
 export async function codeReviewChat() {
-  console.log(`\x1b[32mHello from ${getEnvVariable('OLLAMA_MODEL')}!\x1b[0m`);
+  console.log(`\x1b[32mHello from ${llmProvider}!\x1b[0m`);
+
+  const llm = await getLLM(llmProvider);
 
   const chatMessageHistory = new ChatMessageHistory();
   await chatMessageHistory.addMessage(await systemPromptTemplate.format({}));
