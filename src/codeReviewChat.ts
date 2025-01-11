@@ -1,17 +1,20 @@
 import {input} from '@inquirer/prompts';
 import {ChatPromptTemplate, MessagesPlaceholder} from '@langchain/core/prompts';
+import {HumanMessage} from '@langchain/core/messages';
 import {ChatMessageHistory} from 'langchain/stores/message/in_memory';
 import {getEnvVariable} from './common';
-import {llm} from './models/ollama';
 import {systemPromptTemplate, userPromptTemplate} from './prompts';
 import {azureDevOpsTools, uiTools} from './tools';
-import {HumanMessage} from '@langchain/core/messages';
+import {getLLM} from './models';
 
+const llmProvider = getEnvVariable('LLM_PROVIDER');
 const projectName = getEnvVariable('AZURE_DEVOPS_PROJECT_NAME');
 const repositoryName = getEnvVariable(
   'AZURE_DEVOPS_DEFAULT_REPOSITORY_NAME',
   '',
 );
+
+const llm = getLLM(llmProvider);
 export async function codeReviewChat() {
   console.log(`\x1b[32mHello from ${getEnvVariable('OLLAMA_MODEL')}!\x1b[0m`);
 
